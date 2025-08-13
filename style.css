@@ -10,6 +10,13 @@ body {
     min-height: 100vh;
 }
 
+/* Post pages - narrower width for better readability */
+body:not(.floating-layout) {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
 /* Navigation */
 nav {
     padding: 1rem 0;
@@ -39,7 +46,7 @@ main {
     margin: 2rem 0;
 }
 
-.posts-grid {
+.floating-layout .posts-grid {
     position: fixed;
     top: 100px;
     left: 0;
@@ -47,6 +54,10 @@ main {
     bottom: 60px;
     width: 100%;
     overflow: hidden;
+}
+
+.posts-grid {
+    margin-top: 1.5rem;
 }
 
 h2 {
@@ -69,37 +80,52 @@ h3 {
 }
 
 article {
-    position: absolute;
+    margin-bottom: 2rem;
+}
+
+.floating-layout article {
     padding: 1.5rem;
     border: 1px solid #eee;
     border-radius: 8px;
-    background-color: #fafafa;
     transition: box-shadow 0.2s;
-    width: 280px;
-    cursor: pointer;
 }
 
-article:hover {
+.floating-layout article:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.floating-layout article {
+    position: absolute;
+    width: 280px;
+    cursor: pointer;
+    margin-bottom: 0;
+    background: linear-gradient(45deg, #ffffff, #fffbf0, #fff9e6, #fff3d1);
+    background-size: 400% 400%;
+    animation-duration: 8s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.floating-layout article:hover {
     z-index: 10;
 }
 
-article:nth-child(1) {
+.floating-layout article:nth-child(1) {
     top: 10%;
     left: 5%;
-    animation: float1 15s ease-in-out infinite;
+    animation: float1 15s ease-in-out infinite, gradient1 8s ease-in-out infinite;
 }
 
-article:nth-child(2) {
+.floating-layout article:nth-child(2) {
     top: 70%;
     left: 80%;
-    animation: float2 18s ease-in-out infinite;
+    animation: float2 18s ease-in-out infinite, gradient2 10s ease-in-out infinite;
 }
 
-article:nth-child(3) {
+.floating-layout article:nth-child(3) {
     top: 30%;
     left: 50%;
-    animation: float3 20s ease-in-out infinite;
+    animation: float3 20s ease-in-out infinite, gradient3 12s ease-in-out infinite;
 }
 
 @keyframes float1 {
@@ -129,6 +155,24 @@ article:nth-child(3) {
     100% { transform: translate(0, 0) rotate(0deg); }
 }
 
+@keyframes gradient1 {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes gradient2 {
+    0% { background-position: 50% 0%; }
+    50% { background-position: 50% 100%; }
+    100% { background-position: 50% 0%; }
+}
+
+@keyframes gradient3 {
+    0% { background-position: 100% 0%; }
+    50% { background-position: 0% 100%; }
+    100% { background-position: 100% 0%; }
+}
+
 article p {
     margin-bottom: 1rem;
 }
@@ -147,15 +191,19 @@ article a:hover {
 
 /* Footer */
 footer {
+    color: #777;
+    font-size: 0.9rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.floating-layout footer {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    color: #777;
-    font-size: 0.9rem;
     padding: 1rem 2rem;
-    border-top: 1px solid #eee;
-    text-align: center;
     background-color: #fff;
     z-index: 100;
 }
@@ -174,11 +222,11 @@ footer {
         font-size: 1.3rem;
     }
     
-    .posts-grid {
+    .floating-layout .posts-grid {
         top: 80px;
     }
     
-    article {
+    .floating-layout article {
         width: 250px;
     }
     

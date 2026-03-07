@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="images/206215018.png">
 </head>
-<body class="floating-layout">
+<body>
     <nav>
 		<a href="archive.html">Archive</a>
         <a href="index.html">Home</a>
@@ -17,6 +17,11 @@
         <section>
             <h2>Archive</h2>
             <div class="posts-grid">
+                <article onclick="window.location.href='posts/image_collection_202603.html'" style="background-image: url('images/202603.png')">
+                    <h3>202603</h3>
+                    <div class="post-date"><i>March 7, 2026</i></div>
+                    <p></p>
+                </article>
                 <article onclick="window.location.href='posts/whatwhy.html'">
                     <h3>what and why</h3>
                     <div class="post-date"><i>August 13, 2025</i></div>
@@ -33,7 +38,7 @@
 
     <footer>
         <div>
-            <p>&copy; 2025 Admirabilia</p>
+            <p>&copy; <span class="copyright-year"></span> Admirabilia</p>
         </div>
     </footer>
 </body>

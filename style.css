@@ -83,6 +83,39 @@ article {
     margin-bottom: 2rem;
 }
 
+.posts-grid article {
+    padding: 1.5rem;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    transition: box-shadow 0.2s;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+}
+
+.posts-grid article::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 1;
+    border-radius: 12px;
+}
+
+.posts-grid article > * {
+    position: relative;
+    z-index: 2;
+}
+
+.posts-grid article:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .floating-layout article {
     padding: 1.5rem;
     border: 1px solid #eee;
@@ -177,6 +210,14 @@ article p {
     margin-bottom: 1rem;
 }
 
+/* Image styles */
+img {
+    width: 90%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
 article a {
     display: inline-block;
     text-decoration: none;
@@ -206,6 +247,15 @@ footer {
     padding: 1rem 2rem;
     background-color: #fff;
     z-index: 100;
+}
+
+/* Copyright year variable */
+:root {
+    --copyright-year: "2026";
+}
+
+.copyright-year::after {
+    content: var(--copyright-year);
 }
 
 /* Responsive adjustments */

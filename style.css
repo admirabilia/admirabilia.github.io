@@ -35,10 +35,12 @@ nav a {
     color: #555;
     font-weight: 500;
     transition: color 0.2s;
+    cursor: pointer;
 }
 
 nav a:hover {
     color: #000;
+    cursor: pointer;
 }
 
 /* Main content */
@@ -224,10 +226,32 @@ article a {
     color: #0066cc;
     font-weight: 500;
     transition: color 0.2s;
+    cursor: pointer;
+}
+
+article a::before {
+    content: '';
+    background-image: url("../admirabilia.github.io/images/right_pointer.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 1em;
+    height: 1em;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.25em;
 }
 
 article a:hover {
     color: #004999;
+    cursor: pointer;
+}
+
+article a:hover::after {
+    opacity: 1;
+    transform: translate(1px, -1px);
 }
 
 /* Footer */

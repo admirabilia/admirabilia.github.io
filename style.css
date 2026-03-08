@@ -231,7 +231,7 @@ article a {
 
 article a::before {
     content: '';
-    background-image: url("./images/right_pointer.png");
+    background-image: url("../admirabilia.github.io/images/right_pointer.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -249,7 +249,7 @@ article a:hover {
     cursor: pointer;
 }
 
-article a:hover::after {
+article a:hover::before {
     opacity: 1;
     transform: translate(1px, -1px);
 }

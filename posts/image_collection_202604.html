@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admirabilia</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/png" href="../images/206215018.png">
+    <style>
+        body {
+            max-width: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        main {
+            margin: 0;
+            position: relative;
+            pointer-events: none;
+        }
+
+        main h3, main .post-date {
+            position: relative;
+            z-index: 200;
+            pointer-events: auto;
+            padding-left: 1.5rem;
+        }
+
+        .photo-table {
+            pointer-events: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .photo-card {
+            position: absolute;
+            cursor: pointer;
+            background: #fff;
+            padding: 8px 8px 0;
+            box-shadow: 2px 4px 14px rgba(0,0,0,0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            user-select: none;
+        }
+
+        .photo-card .caption {
+            padding: 5px 4px 8px;
+            font-size: 0.7rem;
+            color: #555;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .photo-card:hover {
+            box-shadow: 6px 12px 28px rgba(0,0,0,0.28);
+            z-index: 10;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            opacity: 0;
+            pointer-events: none;
+            cursor: zoom-out;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 88vh;
+            object-fit: contain;
+            box-shadow: 0 8px 60px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../archive.html">Archive</a>
+        <a href="../index.html">Home</a>
+    </nav>
+
+    <main>
+        <h3>202604</h3>
+        <div class="post-date"><i>April 10, 2026</i></div>
+        <div class="photo-table" id="photoTable">
+            <div class="photo-card"><img src="../images/202604/1.jpeg" alt=""><span class="caption">Enzo Mari - Disegno per la struttura - 1963</span></div>
+            <div class="photo-card"><img src="../images/202604/2.jpeg" alt=""><span class="caption">Saimaluu-Tash Petroglyphs - Kyrgyzstan - circa 2400-900 BC </span></div>
+            <div class="photo-card"><img src="../images/202604/3.jpg" alt=""><span class="caption">Perfect Days - Wim Wenders - 2023</span></div>
+            <div class="photo-card"><img src="../images/202604/7.jpg" alt=""><span class="caption">Henri Matisse - Safrano roses at the window - 1925</span></div>
+            <div class="photo-card"><img src="../images/202604/5.jpg" alt=""><span class="caption">David Black</span></div>
+            <div class="photo-card"><img src="../images/202604/6.jpg" alt=""><span class="caption">Jens Ingvarsson</span></div>
+            <div class="photo-card"><img src="../images/202604/10.jpg" alt=""><span class="caption">Ca' d'Oro - Venezia - 15th century</span></div>
+            <div class="photo-card"><img src="../images/202604/9.jpg" alt=""><span class="caption">Antikes Erbe - István Rácz - 1965</span></div>
+            <div class="photo-card"><img src="../images/202604/11.jpg" alt=""><span class="caption">Green on White - Mark Rothko - 1964</span></div>
+        </div>
+    </main>
+
+    <div class="lightbox" id="lightbox">
+        <img id="lightboxImg" src="" alt="">
+    </div>
+
+    <script>
+    (function () {
+        const nav = document.querySelector('nav');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const cards = Array.from(document.querySelectorAll('.photo-card'));
+        let activeCard = null;
+
+        // --- Scatter cards randomly across the table ---
+        function scatter() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const navH = nav.offsetHeight + 10;
+            const areaH = vh - navH;
+
+            const n = cards.length;
+            const cols = Math.ceil(Math.sqrt(n * vw / areaH));
+            const rows = Math.ceil(n / cols);
+            const cellW = vw / cols;
+            const cellH = areaH / rows;
+
+            // Shuffle cell assignments so layout varies each load
+            const cellIndices = Array.from({length: cols * rows}, (_, i) => i);
+            for (let i = cellIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cellIndices[i], cellIndices[j]] = [cellIndices[j], cellIndices[i]];
+            }
+
+            cards.forEach((card, i) => {
+                const cell = cellIndices[i];
+                const col = cell % cols;
+                const row = Math.floor(cell / cols);
+
+                const cardW = Math.round(160 + Math.random() * 80);
+                const pad = 16;
+
+                const maxOffX = Math.max(0, cellW - cardW - pad * 2);
+                const maxOffY = Math.max(0, cellH - cardW * 1.35 - pad * 2);
+
+                const x = col * cellW + pad + Math.random() * maxOffX;
+                const y = navH + row * cellH + pad + Math.random() * maxOffY;
+                const r = (Math.random() - 0.5) * 14; // ±7 deg
+
+                card.dataset.rotation = r.toFixed(2);
+                card.style.left = `${x.toFixed(1)}px`;
+                card.style.top  = `${y.toFixed(1)}px`;
+                card.style.width = `${cardW}px`;
+                card.style.transform = `rotate(${r.toFixed(2)}deg)`;
+            });
+        }
+
+        scatter();
+
+        // Hover: lift card (suppress during drag)
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (activeCard || drag) return;
+                const r = card.dataset.rotation || '0';
+                card.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                card.style.transform = `rotate(${r}deg) scale(1.04) translateY(-4px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                if (activeCard || drag) return;
+                const r = card.dataset.rotation || '0';
+                card.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                card.style.transform = `rotate(${r}deg)`;
+            });
+        });
+
+        // --- Drag ---
+        let drag = null;
+        let topZ  = 20;
+
+        function pointerPos(e) {
+            return e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
+                              : { x: e.clientX, y: e.clientY };
+        }
+
+        function dragStart(e) {
+            if (activeCard) return;
+            const card = e.target.closest('.photo-card');
+            if (!card) return;
+            e.preventDefault();
+
+            const { x, y } = pointerPos(e);
+            const rect = card.getBoundingClientRect();
+            drag = {
+                card,
+                startX: x, startY: y,
+                offX: x - rect.left,
+                offY: y - rect.top,
+                moved: false,
+                prevZ: card.style.zIndex
+            };
+            card.style.transition = 'box-shadow 0.2s ease';
+        }
+
+        function dragMove(e) {
+            if (!drag) return;
+            e.preventDefault();
+            const { x, y } = pointerPos(e);
+            const dx = x - drag.startX;
+            const dy = y - drag.startY;
+
+            if (!drag.moved && Math.hypot(dx, dy) > 5) {
+                drag.moved = true;
+                drag.card.style.zIndex = ++topZ;
+            }
+
+            if (drag.moved) {
+                const r = drag.card.dataset.rotation || '0';
+                drag.card.style.left = `${x - drag.offX}px`;
+                drag.card.style.top  = `${y - drag.offY}px`;
+                drag.card.style.transform = `rotate(${r}deg) scale(1.04)`;
+                drag.card.style.boxShadow = '8px 16px 32px rgba(0,0,0,0.32)';
+            }
+        }
+
+        function dragEnd() {
+            if (!drag) return;
+            const { card, moved, prevZ } = drag;
+            const r = card.dataset.rotation || '0';
+            card.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+            card.style.transform = `rotate(${r}deg)`;
+            card.style.boxShadow = '';
+            drag = null;
+            if (!moved && !activeCard) openLightbox(card);
+        }
+
+        const table = document.getElementById('photoTable');
+        table.addEventListener('mousedown',  dragStart);
+        table.addEventListener('touchstart', dragStart, { passive: false });
+        document.addEventListener('mousemove',  dragMove);
+        document.addEventListener('touchmove',  dragMove, { passive: false });
+        document.addEventListener('mouseup',    dragEnd);
+        document.addEventListener('touchend',   dragEnd);
+
+        // --- Compute the rendered size of the lightbox image ---
+        function lightboxRenderedSize(img) {
+            const nw = img.naturalWidth  || 1;
+            const nh = img.naturalHeight || 1;
+            const maxW = window.innerWidth  * 0.9;
+            const maxH = window.innerHeight * 0.88;
+            const scale = Math.min(maxW / nw, maxH / nh, 1);
+            return { w: nw * scale, h: nh * scale };
+        }
+
+        // --- Open ---
+        function openLightbox(card) {
+            const rect = card.getBoundingClientRect();
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            const cardImg = card.querySelector('img');
+            const { w: lbW } = lightboxRenderedSize(cardImg);
+            const startScale = rect.width / lbW;
+
+            const dx = (rect.left + rect.width  / 2) - vw / 2;
+            const dy = (rect.top  + rect.height / 2) - vh / 2;
+            const rot = card.dataset.rotation || '0';
+
+            activeCard = card;
+            card.style.opacity = '0';
+            card.style.pointerEvents = 'none';
+
+            lightboxImg.src = cardImg.src;
+
+            // Snap to starting position (no transition)
+            lightbox.style.transition   = 'none';
+            lightbox.style.background   = 'rgba(0,0,0,0)';
+            lightbox.style.opacity      = '1';
+            lightbox.style.pointerEvents = 'auto';
+
+            lightboxImg.style.transition = 'none';
+            lightboxImg.style.transform  = `translate(${dx}px,${dy}px) scale(${startScale}) rotate(${rot}deg)`;
+            lightboxImg.style.opacity    = '0.8';
+
+            // Animate to center
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                lightboxImg.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease';
+                lightboxImg.style.transform  = 'translate(0,0) scale(1) rotate(0deg)';
+                lightboxImg.style.opacity    = '1';
+                lightbox.style.transition    = 'background 0.35s ease';
+                lightbox.style.background    = 'rgba(0,0,0,0.82)';
+            }));
+        }
+
+        // --- Close ---
+        function closeLightbox() {
+            if (!activeCard) return;
+            const card = activeCard;
+
+            const rect = card.getBoundingClientRect();
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            const cardImg = card.querySelector('img');
+            const { w: lbW } = lightboxRenderedSize(cardImg);
+            const endScale = rect.width / lbW;
+
+            const dx = (rect.left + rect.width  / 2) - vw / 2;
+            const dy = (rect.top  + rect.height / 2) - vh / 2;
+            const rot = card.dataset.rotation || '0';
+
+            // Restore card immediately so it's never invisible
+            card.style.opacity       = '';
+            card.style.pointerEvents = '';
+
+            lightboxImg.style.transition = 'transform 0.38s cubic-bezier(0.4,0,0.6,1), opacity 0.28s ease';
+            lightboxImg.style.transform  = `translate(${dx}px,${dy}px) scale(${endScale}) rotate(${rot}deg)`;
+            lightboxImg.style.opacity    = '0';
+            lightbox.style.transition    = 'background 0.35s ease';
+            lightbox.style.background    = 'rgba(0,0,0,0)';
+
+            setTimeout(() => {
+                lightbox.style.opacity       = '0';
+                lightbox.style.pointerEvents = 'none';
+                lightboxImg.src              = '';
+                activeCard = null;
+            }, 400);
+        }
+
+
+        lightbox.addEventListener('click', () => { if (activeCard) closeLightbox(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && activeCard) closeLightbox(); });
+    })();
+    </script>
+</body>
+</html>
